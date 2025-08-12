@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -8,20 +10,33 @@ const supabase = createClient(
 )
 
 export default function Home() {
-  async function testConnection() {
-    const { data, error } = await supabase.from('test').select('*')
-    console.log('Supabase response:', { data, error })
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function signOutAndRedirect() {
+      await supabase.auth.signOut()  // force sign out every time on home page load
+
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        router.replace('/dashboard')
+      } else {
+        router.replace('/login')
+      }
+
+      setLoading(false)
+    }
+    signOutAndRedirect()
+  }, [router])
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-8">
+        <p>Loading...</p>
+      </main>
+    )
   }
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <h1 className="text-3xl font-bold">Hello Rink Relay</h1>
-      <button
-        onClick={testConnection}
-        className="mt-6 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-      >
-        Test Supabase
-      </button>
-    </main>
-  )
+  return null
 }
