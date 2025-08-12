@@ -30,3 +30,5 @@ export default function CheckYourEmail() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
