@@ -16,14 +16,36 @@ export default function Login() {
     setErrorMsg('');
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error || !data.user) {
+      setErrorMsg(error?.message || 'Login failed');
+      setLoading(false);
+      return;
+    }
+
+    // Fetch the user role from your 'users' table
+    const { data: userProfile, error: roleError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
 
     setLoading(false);
 
-    if (error) {
-      setErrorMsg(error.message);
+    if (roleError || !userProfile) {
+      setErrorMsg('Failed to fetch user role.');
+      return;
+    }
+
+    // Redirect based on role
+    const role = userProfile.role;
+    if (role === 'organizer') {
+      router.push('/dashboard/organizer');
+    } else if (role === 'coach') {
+      router.push('/dashboard/coach');
     } else {
-      router.push('/dashboard'); // redirect after login
+      router.push('/dashboard/player');
     }
   }
 

@@ -14,20 +14,44 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function signOutAndRedirect() {
-      await supabase.auth.signOut()  // force sign out every time on home page load
-
+    async function checkUserAndRedirect() {
       const { data: { user } } = await supabase.auth.getUser()
 
       if (user) {
-        router.replace('/dashboard')
+        // Fetch user role from your 'users' table
+        const { data: userData, error } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (error || !userData?.role) {
+          // If no role found or error, fallback to general dashboard or logout
+          router.replace('/dashboard')
+        } else {
+          // Redirect based on role
+          switch (userData.role) {
+            case 'organizer':
+              router.replace('/dashboard/organizer')
+              break
+            case 'coach':
+              router.replace('/dashboard/coach')
+              break
+            case 'player':
+              router.replace('/dashboard/player')
+              break
+            default:
+              router.replace('/dashboard')
+          }
+        }
       } else {
         router.replace('/login')
       }
 
       setLoading(false)
     }
-    signOutAndRedirect()
+
+    checkUserAndRedirect()
   }, [router])
 
   if (loading) {
