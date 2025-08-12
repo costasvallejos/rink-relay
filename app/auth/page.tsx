@@ -15,7 +15,7 @@ export default function MagicLinkAuth() {
     setErrorMsg('');
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/post-login`, // redirect after clicking magic link
@@ -36,7 +36,7 @@ export default function MagicLinkAuth() {
     <div className="max-w-md mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Sign In or Sign Up with Magic Link</h1>
       <p className="mb-6 text-gray-700">
-        Enter your email and we'll send you a magic link to sign in or create an account.
+        Enter your email and we&apos;ll send you a magic link to sign in or create an account.
       </p>
 
       <form onSubmit={handleSendLink} className="flex flex-col gap-4">
