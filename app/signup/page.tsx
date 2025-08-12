@@ -37,8 +37,8 @@ export default function SignUp() {
           value={email}
           required
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded"
           disabled={loading}
+          className="border p-2 rounded"
         />
         <input
           type="password"
@@ -46,8 +46,8 @@ export default function SignUp() {
           value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
           disabled={loading}
+          className="border p-2 rounded"
         />
         <button
           type="submit"
@@ -57,7 +57,19 @@ export default function SignUp() {
           {loading ? 'Signing up...' : 'Sign Up'}
         </button>
       </form>
+
       {errorMsg && <p className="text-red-600 mt-4">{errorMsg}</p>}
+
+      <p className="mt-6 text-center">
+        Already have an account?{' '}
+        <button
+          type="button"
+          onClick={() => router.push('/login')}
+          className="text-blue-600 hover:underline"
+        >
+          Log In
+        </button>
+      </p>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function Login() {
     setErrorMsg('');
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     setLoading(false);
 
@@ -61,7 +61,7 @@ export default function Login() {
       {errorMsg && <p className="text-red-600 mt-4">{errorMsg}</p>}
 
       <p className="mt-6 text-center">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <button
           type="button"
           onClick={() => router.push('/signup')}
