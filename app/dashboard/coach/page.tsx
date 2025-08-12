@@ -8,7 +8,7 @@ export default function CoachDashboard() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push('/auth');
   }
 
   return (

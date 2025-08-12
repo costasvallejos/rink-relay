@@ -45,7 +45,7 @@ export default function Home() {
           }
         }
       } else {
-        router.replace('/login')
+        router.replace('/auth')
       }
 
       setLoading(false)
