@@ -29,7 +29,7 @@ export default function MagicLinkAuth() {
     }
 
     setLoading(false);
-    router.push(`/check-your-email?email=${encodeURIComponent(email)}`);
+    router.push('/check-your-email'); // NO email param here
   }
 
   return (
