@@ -21,6 +21,4 @@ export default function CheckYourEmail() {
       </button>
     </div>
   );
-}
-
-export const dynamic = 'force-dynamic';
+} 
