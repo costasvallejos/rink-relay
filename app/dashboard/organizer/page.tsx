@@ -88,7 +88,7 @@ export default function OrganizerDashboard() {
       {error && <p className="text-red-600">{error}</p>}
 
       {!loading && !error && tournaments.length === 0 && (
-        <p>You don't have any tournaments right now.</p>
+        <p>You don&apos;t have any tournaments right now.</p>
       )}
 
       {!loading && tournaments.length > 0 && (
