@@ -1,5 +1,4 @@
 'use client';
-
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import supabase from '../../../lib/supabaseClient';
@@ -12,7 +11,7 @@ type Team = {
 
 export default function PlayerDashboard() {
   const router = useRouter();
-  const [teams, setTeams] = useState<Team[]>([]); // ✅ Tell TS what the array contains
+  const [teams, setTeams] = useState<Team[]>([]);
   const [joinCode, setJoinCode] = useState('');
 
   async function handleLogout() {
@@ -37,70 +36,82 @@ export default function PlayerDashboard() {
     }
 
     if (data) {
-      const formattedTeams = data.map((item: any) => ({
-        id: item.team.id,
-        name: item.team.name,
-        join_code: item.team.join_code
-      }));
+      // Handle the response more safely without strict typing
+      const formattedTeams: Team[] = [];
+      
+      for (const item of data) {
+        // Check if team exists and has the required properties
+        if (item && typeof item === 'object' && 'team' in item) {
+          const team = (item as { team: unknown }).team;
+          
+          if (team && typeof team === 'object' && 
+              'id' in team && 'name' in team && 'join_code' in team) {
+            formattedTeams.push({
+              id: String((team as { id: unknown }).id),
+              name: String((team as { name: unknown }).name),
+              join_code: String((team as { join_code: unknown }).join_code)
+            });
+          }
+        }
+      }
+      
       setTeams(formattedTeams);
     }
   }
 
   async function handleJoinTeam() {
     if (!joinCode.trim()) return alert('Please enter a join code.');
-  
+
     const { data: userData } = await supabase.auth.getUser();
     const playerId = userData?.user?.id;
     if (!playerId) return alert('You must be logged in.');
-  
+
     // 1️⃣ Check if join code is valid
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
       .select('id, name, join_code')
       .eq('join_code', joinCode.trim())
       .single();
-  
+
     if (teamError || !teamData) {
       alert('Invalid join code.');
       return;
     }
-  
+
     // 2️⃣ Check if already in team
     const { data: existing, error: existingError } = await supabase
       .from('players_teams')
       .select('*')
       .eq('player_id', playerId)
       .eq('team_id', teamData.id);
-  
+
     if (existingError) {
       console.error(existingError);
       alert('Error checking team membership.');
       return;
     }
-  
+
     if (existing && existing.length > 0) {
       alert('You are already in this team.');
       return;
     }
-  
+
     // 3️⃣ Insert into players_teams
     const { error: insertError } = await supabase
       .from('players_teams')
       .insert([{ player_id: playerId, team_id: teamData.id }]);
-  
+
     if (insertError) {
       console.error(insertError);
       alert('Error joining team.');
       return;
     }
-  
+
     alert(`Successfully joined ${teamData.name}!`);
     setJoinCode('');
-  
     // Refresh teams
     fetchTeams();
   }
-  
 
   useEffect(() => {
     fetchTeams();
@@ -109,7 +120,7 @@ export default function PlayerDashboard() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <h1 className="text-4xl font-bold mb-6">Player Dashboard</h1>
-
+      
       <div className="mb-4 flex gap-2">
         <input
           type="text"
@@ -136,7 +147,7 @@ export default function PlayerDashboard() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500">You haven’t joined any teams yet.</p>
+        <p className="text-gray-500">You haven't joined any teams yet.</p>
       )}
 
       <button
