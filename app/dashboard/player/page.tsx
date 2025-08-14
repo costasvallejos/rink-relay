@@ -147,7 +147,7 @@ export default function PlayerDashboard() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500">You haven't joined any teams yet.</p>
+        <p className="text-gray-500">You haven&apos;t joined any teams yet.</p>
       )}
 
       <button
