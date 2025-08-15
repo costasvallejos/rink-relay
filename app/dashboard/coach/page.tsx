@@ -79,7 +79,7 @@ export default function CoachDashboard() {
             <div
               key={team.id}
               className="border p-4 rounded hover:shadow cursor-pointer"
-              onClick={() => router.push(`/dashboard/coach/teams/${team.id}`)}
+              onClick={() => router.push(`/dashboard/teams/${team.id}`)}
             >
               <h2 className="text-xl font-semibold">{team.name}</h2>
               <p className="text-sm">Join Code: <code>{team.join_code}</code></p>

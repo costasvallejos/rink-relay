@@ -19,16 +19,22 @@ export default function PlayerDashboard() {
     router.push('/auth');
   }
 
+  // Fetch all teams where current user is in team_members
   async function fetchTeams() {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) return;
+
     const { data, error } = await supabase
-      .from('players_teams')
+      .from('team_members')
       .select(`
         team:teams (
           id,
           name,
           join_code
         )
-      `);
+      `)
+      .eq('user_id', userId);
 
     if (error) {
       console.error(error);
@@ -36,16 +42,15 @@ export default function PlayerDashboard() {
     }
 
     if (data) {
-      // Handle the response more safely without strict typing
       const formattedTeams: Team[] = [];
-      
+
       for (const item of data) {
-        // Check if team exists and has the required properties
         if (item && typeof item === 'object' && 'team' in item) {
           const team = (item as { team: unknown }).team;
-          
-          if (team && typeof team === 'object' && 
-              'id' in team && 'name' in team && 'join_code' in team) {
+          if (
+            team && typeof team === 'object' &&
+            'id' in team && 'name' in team && 'join_code' in team
+          ) {
             formattedTeams.push({
               id: String((team as { id: unknown }).id),
               name: String((team as { name: unknown }).name),
@@ -54,7 +59,7 @@ export default function PlayerDashboard() {
           }
         }
       }
-      
+
       setTeams(formattedTeams);
     }
   }
@@ -66,7 +71,7 @@ export default function PlayerDashboard() {
     const playerId = userData?.user?.id;
     if (!playerId) return alert('You must be logged in.');
 
-    // 1️⃣ Check if join code is valid
+    // 1. Check if join code is valid
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
       .select('id, name, join_code')
@@ -78,11 +83,11 @@ export default function PlayerDashboard() {
       return;
     }
 
-    // 2️⃣ Check if already in team
+    // 2. Check if already in team_members
     const { data: existing, error: existingError } = await supabase
-      .from('players_teams')
+      .from('team_members')
       .select('*')
-      .eq('player_id', playerId)
+      .eq('user_id', playerId)
       .eq('team_id', teamData.id);
 
     if (existingError) {
@@ -96,20 +101,24 @@ export default function PlayerDashboard() {
       return;
     }
 
-    // 3️⃣ Insert into players_teams
-    const { error: insertError } = await supabase
-      .from('players_teams')
-      .insert([{ player_id: playerId, team_id: teamData.id }]);
+    // 3. Insert into team_members
+    const { error: memberError } = await supabase
+      .from('team_members')
+      .insert([{
+        team_id: teamData.id,
+        user_id: playerId,
+        member_type: 'player',
+        joined_at: new Date().toISOString()
+      }]);
 
-    if (insertError) {
-      console.error(insertError);
+    if (memberError) {
+      console.error(memberError);
       alert('Error joining team.');
       return;
     }
 
     alert(`Successfully joined ${teamData.name}!`);
     setJoinCode('');
-    // Refresh teams
     fetchTeams();
   }
 
@@ -140,7 +149,11 @@ export default function PlayerDashboard() {
       {teams.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
           {teams.map((team) => (
-            <div key={team.id} className="p-4 border rounded shadow">
+            <div 
+              key={team.id} 
+              className="p-4 border rounded shadow hover:shadow-md cursor-pointer transition-shadow"
+              onClick={() => router.push(`/dashboard/teams/${team.id}`)}
+            >
               <h2 className="font-bold text-lg">{team.name}</h2>
               <p className="text-sm text-gray-600">Code: {team.join_code}</p>
             </div>

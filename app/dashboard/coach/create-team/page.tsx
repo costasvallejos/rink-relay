@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import supabase from '@/lib/supabaseClient';
@@ -33,20 +32,50 @@ export default function CreateTeam() {
 
     const joinCode = generateJoinCode();
 
-    const { error } = await supabase.from('teams').insert([{
-      name: teamName,
-      coach_id: user.id,
-      join_code: joinCode,
-    }]);
+    try {
+      // First, create the team and get the team data back
+      const { data: teamData, error: teamError } = await supabase
+        .from('teams')
+        .insert([{
+          name: teamName,
+          coach_id: user.id,
+          join_code: joinCode,
+        }])
+        .select()
+        .single();
 
-    if (error) {
-      setErrorMsg(error.message);
+      if (teamError) {
+        setErrorMsg(teamError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Then, add the coach as a team member with joined_at timestamp
+      const { error: memberError } = await supabase
+        .from('team_members')
+        .insert([{
+          team_id: teamData.id,
+          user_id: user.id,
+          member_type: 'coach',
+          joined_at: new Date().toISOString() // Add the joined_at timestamp
+        }]);
+
+      if (memberError) {
+        // If adding the coach as a member fails, we should probably delete the team
+        // or handle this error appropriately
+        console.error('Error adding coach as team member:', memberError);
+        setErrorMsg('Team created but failed to add coach as member. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
       setLoading(false);
-      return;
+      router.push('/dashboard/coach');
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      setErrorMsg('An unexpected error occurred. Please try again.');
+      setLoading(false);
     }
-
-    setLoading(false);
-    router.push('/dashboard/coach'); // or redirect to new team details page if you want
   }
 
   return (
