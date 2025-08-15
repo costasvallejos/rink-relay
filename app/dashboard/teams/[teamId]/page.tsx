@@ -51,7 +51,7 @@ export default function TeamView() {
   const [joiningTournament, setJoiningTournament] = useState(false);
 
   // Extract tournament fetching into a separate function
-  async function fetchTournaments() {
+  const fetchTournaments = async () => {
     const { data: tournamentData, error: tournamentError } = await supabase
       .from('team_tournaments')
       .select(`
@@ -85,7 +85,7 @@ export default function TeamView() {
       console.log('Formatted tournaments:', formattedTournaments); // Debug log
       return formattedTournaments;
     }
-  }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -148,12 +148,15 @@ export default function TeamView() {
             ? item.users[0] 
             : item.users;
           
+          // Type the userData properly
+          const typedUserData = userData as { id?: string; email?: string; role?: string } | undefined;
+          
           return {
             id: item.user_id as string,
             user: {
-              id: (userData as any)?.id || item.user_id as string,
-              email: (userData as any)?.email || 'Unknown',
-              role: (userData as any)?.role || 'user'
+              id: typedUserData?.id || item.user_id as string,
+              email: typedUserData?.email || 'Unknown',
+              role: typedUserData?.role || 'user'
             },
             member_type: item.member_type as string
           };
@@ -169,7 +172,7 @@ export default function TeamView() {
     if (teamId) {
       fetchData();
     }
-  }, [teamId, router]);
+  }, [teamId, router, fetchTournaments]);
 
   async function handleJoinTournament() {
     if (!tournamentJoinCode.trim()) {
