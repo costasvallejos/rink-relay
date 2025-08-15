@@ -35,17 +35,7 @@ interface TeamTournamentResponse {
   tournaments: Tournament | Tournament[]; // Can be either single object or array
 }
 
-interface TeamMemberResponse {
-  team_id: string;
-  user_id: string;
-  joined_at: string;
-  member_type: string;
-  users: {
-    id: string;
-    email: string;
-    role: string;
-  };
-}
+// Removed unused TeamMemberResponse interface
 
 export default function TeamView() {
   const router = useRouter();
@@ -84,7 +74,7 @@ export default function TeamView() {
       
       // Handle both single object and array responses
       const formattedTournaments = tournamentData
-        ?.map((item: any) => {
+        ?.map((item: TeamTournamentResponse) => {
           // Handle case where tournaments might be a single object or array
           const tournaments = item.tournaments;
           return Array.isArray(tournaments) ? tournaments : [tournaments];
@@ -151,15 +141,23 @@ export default function TeamView() {
       } else {
         console.log('Raw members data:', membersData);
         
-        const formattedMembers = membersData?.map((item: any) => ({
-          id: item.user_id,
-          user: {
-            id: item.users?.id || item.user_id,
-            email: item.users?.email || 'Unknown',
-            role: item.users?.role || 'user'
-          },
-          member_type: item.member_type
-        })).filter(member => member.user.id) || [];
+        // Use a more flexible type that matches actual Supabase response
+        const formattedMembers = membersData?.map((item: Record<string, unknown>) => {
+          // Handle both single object and array cases for users
+          const userData = Array.isArray(item.users) 
+            ? item.users[0] 
+            : item.users;
+          
+          return {
+            id: item.user_id as string,
+            user: {
+              id: (userData as any)?.id || item.user_id as string,
+              email: (userData as any)?.email || 'Unknown',
+              role: (userData as any)?.role || 'user'
+            },
+            member_type: item.member_type as string
+          };
+        }).filter(member => member.user.id) || [];
         
         console.log('Formatted members:', formattedMembers);
         setTeamMembers(formattedMembers);
