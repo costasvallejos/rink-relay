@@ -30,11 +30,11 @@ interface TeamMember {
   member_type: string;
 }
 
+// Flexible interface to handle Supabase response structure
 interface TeamTournamentResponse {
-  tournament: Tournament[];
+  tournaments: Tournament | Tournament[]; // Can be either single object or array
 }
 
-// Fixed interface for team member response
 interface TeamMemberResponse {
   team_id: string;
   user_id: string;
@@ -59,6 +59,43 @@ export default function TeamView() {
   const [isCoach, setIsCoach] = useState(false);
   const [tournamentJoinCode, setTournamentJoinCode] = useState('');
   const [joiningTournament, setJoiningTournament] = useState(false);
+
+  // Extract tournament fetching into a separate function
+  async function fetchTournaments() {
+    const { data: tournamentData, error: tournamentError } = await supabase
+      .from('team_tournaments')
+      .select(`
+        tournaments (
+          id,
+          name,
+          start_date,
+          end_date,
+          location,
+          join_code
+        )
+      `)
+      .eq('team_id', teamId);
+
+    if (tournamentError) {
+      console.error('Error fetching tournaments:', tournamentError);
+      return [];
+    } else {
+      console.log('Tournament data:', tournamentData); // Debug log
+      
+      // Handle both single object and array responses
+      const formattedTournaments = tournamentData
+        ?.map((item: any) => {
+          // Handle case where tournaments might be a single object or array
+          const tournaments = item.tournaments;
+          return Array.isArray(tournaments) ? tournaments : [tournaments];
+        })
+        .flat() // Flatten the array of arrays
+        .filter(Boolean) || [];
+      
+      console.log('Formatted tournaments:', formattedTournaments); // Debug log
+      return formattedTournaments;
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -86,29 +123,11 @@ export default function TeamView() {
       setTeam(teamData);
       setIsCoach(user.id === teamData.coach_id);
 
-      // Fetch tournaments the team is registered in
-      const { data: tournamentData, error: tournamentError } = await supabase
-        .from('team_tournaments')
-        .select(`
-          tournament:tournaments (
-            id,
-            name,
-            start_date,
-            end_date,
-            location,
-            join_code
-          )
-        `)
-        .eq('team_id', teamId);
+      // Fetch tournaments using the extracted function
+      const fetchedTournaments = await fetchTournaments();
+      setTournaments(fetchedTournaments);
 
-      if (tournamentError) {
-        console.error('Error fetching tournaments:', tournamentError);
-      } else {
-        const formattedTournaments = tournamentData?.map((item: TeamTournamentResponse) => item.tournament[0]).filter(Boolean) || [];
-        setTournaments(formattedTournaments);
-      }
-
-      // Fixed: Use the specific foreign key relationship name
+      // Fetch team members (unchanged)
       const { data: membersData, error: membersError } = await supabase
         .from('team_members')
         .select(`
@@ -132,16 +151,15 @@ export default function TeamView() {
       } else {
         console.log('Raw members data:', membersData);
         
-        // Format the data correctly
         const formattedMembers = membersData?.map((item: any) => ({
-          id: item.user_id, // Using user_id as the unique identifier since team_members doesn't have its own id
+          id: item.user_id,
           user: {
             id: item.users?.id || item.user_id,
             email: item.users?.email || 'Unknown',
             role: item.users?.role || 'user'
           },
           member_type: item.member_type
-        })).filter(member => member.user.id) || []; // Filter out any null users
+        })).filter(member => member.user.id) || [];
         
         console.log('Formatted members:', formattedMembers);
         setTeamMembers(formattedMembers);
@@ -211,25 +229,9 @@ export default function TeamView() {
       alert(`Successfully joined tournament: ${tournamentData.name}!`);
       setTournamentJoinCode('');
       
-      // Refresh tournaments list
-      const { data: updatedTournaments, error: refreshError } = await supabase
-        .from('team_tournaments')
-        .select(`
-          tournament:tournaments (
-            id,
-            name,
-            start_date,
-            end_date,
-            location,
-            join_code
-          )
-        `)
-        .eq('team_id', teamId);
-
-      if (!refreshError && updatedTournaments) {
-        const formattedTournaments = updatedTournaments.map((item: TeamTournamentResponse) => item.tournament[0]).filter(Boolean);
-        setTournaments(formattedTournaments);
-      }
+      // Refresh tournaments list using the extracted function
+      const updatedTournaments = await fetchTournaments();
+      setTournaments(updatedTournaments);
 
     } catch (error) {
       console.error('Error joining tournament:', error);
@@ -315,7 +317,7 @@ export default function TeamView() {
       {/* Tournaments Section */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold">Tournaments</h2>
+          <h2 className="text-2xl font-semibold">Tournaments ({tournaments.length})</h2>
           {isCoach && (
             <div className="flex gap-2">
               <input
@@ -358,7 +360,7 @@ export default function TeamView() {
       {/* Coach Actions */}
       {isCoach && (
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibent mb-4">Coach Actions</h2>
+          <h2 className="text-2xl font-semibold mb-4">Coach Actions</h2>
           <div className="flex gap-4">
             <button
               onClick={() => router.push(`/dashboard/coach/teams/${teamId}/edit`)}
