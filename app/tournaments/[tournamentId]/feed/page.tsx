@@ -108,8 +108,14 @@ export default function TournamentFeed() {
             }
 
             return {
-              ...highlight,
-              game: highlight.games,
+              id: highlight.id as string,
+              title: highlight.title as string | null,
+              description: highlight.description as string | null,
+              file_url: highlight.file_url as string,
+              file_type: highlight.file_type as 'image' | 'video',
+              created_at: highlight.created_at as string,
+              uploaded_by: highlight.uploaded_by as string,
+              game: highlight.games as Highlight['game'],
               likes_count: count || 0,
               user_liked: userLiked
             };
