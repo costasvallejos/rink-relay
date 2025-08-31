@@ -352,6 +352,22 @@ export default function TeamView() {
                   <p><span className="font-medium">End Date:</span> {formatDate(tournament.end_date)}</p>
                   <p><span className="font-medium">Join Code:</span> <code className="bg-gray-100 px-1 rounded">{tournament.join_code}</code></p>
                 </div>
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={() => router.push(`/tournaments/${tournament.id}/feed`)}
+                    className="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700"
+                  >
+                    View Feed
+                  </button>
+                  {isCoach && (
+                    <button
+                      onClick={() => router.push(`/dashboard/organizer/tournaments/${tournament.id}`)}
+                      className="bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-700"
+                    >
+                      Manage
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
