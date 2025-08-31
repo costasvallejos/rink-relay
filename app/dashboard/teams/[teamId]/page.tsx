@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import supabase from '../../../../lib/supabaseClient';
 
@@ -51,7 +51,7 @@ export default function TeamView() {
   const [joiningTournament, setJoiningTournament] = useState(false);
 
   // Extract tournament fetching into a separate function
-  const fetchTournaments = async () => {
+  const fetchTournaments = useCallback(async () => {
     const { data: tournamentData, error: tournamentError } = await supabase
       .from('team_tournaments')
       .select(`
@@ -85,7 +85,7 @@ export default function TeamView() {
       console.log('Formatted tournaments:', formattedTournaments); // Debug log
       return formattedTournaments;
     }
-  };
+  }, [teamId]);
 
   useEffect(() => {
     async function fetchData() {

@@ -45,7 +45,7 @@ export default function TournamentFeed() {
   useEffect(() => {
     async function fetchData() {
       const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUser(user);
+      setCurrentUser(user as unknown);
 
       // Fetch tournament details
       const { data: tournamentData, error: tournamentError } = await supabase
@@ -85,7 +85,7 @@ export default function TournamentFeed() {
       } else {
         // Get likes count and user's like status for each highlight
         const highlightsWithLikes = await Promise.all(
-          (highlightsData || []).map(async (highlight: any) => {
+          (highlightsData || []).map(async (highlight: Record<string, unknown>) => {
             const { count } = await supabase
               .from('highlight_likes')
               .select('*', { count: 'exact', head: true })
@@ -232,7 +232,7 @@ export default function TournamentFeed() {
                 )}
 
                 {highlight.file_type === 'image' ? (
-                  <img
+                  <img /* eslint-disable-next-line @next/next/no-img-element */
                     src={highlight.file_url}
                     alt={highlight.title || 'Highlight'}
                     className="w-full max-h-96 object-cover rounded"

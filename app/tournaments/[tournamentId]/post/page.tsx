@@ -30,7 +30,7 @@ export default function PostHighlight() {
   useEffect(() => {
     async function fetchData() {
       const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUser(user);
+      setCurrentUser(user as unknown);
 
       if (!user) {
         router.push('/auth');
@@ -54,8 +54,11 @@ export default function PostHighlight() {
       if (gamesError) {
         console.error('Error fetching games:', gamesError);
       } else {
-        const formattedGames = (gamesData || []).map((game: any) => ({
-          ...game,
+        const formattedGames = (gamesData || []).map((game: Record<string, unknown>) => ({
+          id: game.id as string,
+          date: game.date as string,
+          score_a: game.score_a as number,
+          score_b: game.score_b as number,
           team_a: Array.isArray(game.team_a) ? game.team_a[0] : game.team_a,
           team_b: Array.isArray(game.team_b) ? game.team_b[0] : game.team_b
         }));
@@ -90,7 +93,7 @@ export default function PostHighlight() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${currentUser.id}/${Date.now()}.${fileExt}`;
       
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('highlights')
         .upload(fileName, file);
 

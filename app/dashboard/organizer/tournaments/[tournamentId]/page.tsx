@@ -99,7 +99,10 @@ export default function TournamentManagement() {
         `)
         .eq('tournament_id', tournamentId);
 
-      const formattedTeams = teamsData?.map((item: any) => item.teams).filter(Boolean) || [];
+      const formattedTeams = teamsData?.map((item: { teams: Team | Team[] }) => {
+        const teams = item.teams;
+        return Array.isArray(teams) ? teams[0] : teams;
+      }).filter(Boolean) || [];
       setTeams(formattedTeams);
 
       // Fetch games
@@ -259,7 +262,7 @@ export default function TournamentManagement() {
         ].map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
+            onClick={() => setActiveTab(tab.key as typeof activeTab)}
             className={`px-4 py-2 font-medium text-sm rounded-t-lg ${
               activeTab === tab.key
                 ? 'bg-blue-100 text-blue-700 border-b-2 border-blue-700'
