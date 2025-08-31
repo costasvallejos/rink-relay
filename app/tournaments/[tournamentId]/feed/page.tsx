@@ -12,6 +12,11 @@ interface Tournament {
   location: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+}
+
 interface Highlight {
   id: string;
   title: string | null;
@@ -40,12 +45,12 @@ export default function TournamentFeed() {
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUser(user as unknown);
+      setCurrentUser(user as User);
 
       // Fetch tournament details
       const { data: tournamentData, error: tournamentError } = await supabase
@@ -232,7 +237,7 @@ export default function TournamentFeed() {
                 )}
 
                 {highlight.file_type === 'image' ? (
-                  <img /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
                     src={highlight.file_url}
                     alt={highlight.title || 'Highlight'}
                     className="w-full max-h-96 object-cover rounded"

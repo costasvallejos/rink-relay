@@ -13,6 +13,11 @@ interface Game {
   score_b: number;
 }
 
+interface User {
+  id: string;
+  email: string;
+}
+
 export default function PostHighlight() {
   const params = useParams();
   const router = useRouter();
@@ -25,12 +30,12 @@ export default function PostHighlight() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUser(user as unknown);
+      setCurrentUser(user as User);
 
       if (!user) {
         router.push('/auth');
