@@ -359,14 +359,6 @@ export default function TeamView() {
                   >
                     View Feed
                   </button>
-                  {isCoach && (
-                    <button
-                      onClick={() => router.push(`/dashboard/organizer/tournaments/${tournament.id}`)}
-                      className="bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-700"
-                    >
-                      Manage
-                    </button>
-                  )}
                 </div>
               </div>
             ))}
@@ -374,26 +366,7 @@ export default function TeamView() {
         )}
       </div>
 
-      {/* Coach Actions */}
-      {isCoach && (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Coach Actions</h2>
-          <div className="flex gap-4">
-            <button
-              onClick={() => router.push(`/dashboard/coach/teams/${teamId}/edit`)}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
-              Edit Team
-            </button>
-            <button
-              onClick={() => router.push(`/dashboard/coach/teams/${teamId}/members`)}
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-            >
-              Manage Members
-            </button>
-          </div>
-        </div>
-      )}
+
     </main>
   );
 }
