@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rink Relay
 
-## Getting Started
+A professional hockey tournament management platform built with Next.js, TypeScript, and Supabase.
 
-First, run the development server:
+## 🏒 Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Rink Relay is a comprehensive tournament management system designed for hockey teams, coaches, and organizers. The platform enables seamless team creation, tournament organization, and real-time communication between all participants.
+
+## ✨ Features
+
+### For Players
+- Join teams using unique join codes
+- View team information and members
+- Participate in tournaments
+- Access tournament feeds and updates
+
+### For Coaches
+- Create and manage multiple teams
+- Generate team join codes
+- Register teams for tournaments
+- Monitor team performance and engagement
+
+### For Organizers
+- Create and manage tournaments
+- Set tournament dates, locations, and details
+- Generate tournament join codes
+- Oversee tournament participation
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **Backend**: Supabase (PostgreSQL, Auth, Real-time)
+- **Authentication**: Magic link authentication
+- **Deployment**: Vercel-ready
+
+## 🏗 Project Structure
+
+```
+├── app/                    # Next.js App Router pages
+├── components/            # Reusable UI components
+│   ├── ui/               # Base UI components (Button, Card, Input)
+│   ├── forms/            # Form components
+│   └── layout/           # Layout components
+├── hooks/                # Custom React hooks
+├── lib/                  # Utility libraries and configurations
+├── types/                # TypeScript type definitions
+├── utils/                # Utility functions
+├── constants/            # Application constants
+└── public/               # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18+ 
+- npm or yarn
+- Supabase account
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd rink-relay
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
 
-## Deploy on Vercel
+Add your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Run the development server
+```bash
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+## 🎨 Design System
+
+The application uses a custom design system with:
+- **Color Palette**: Professional blues, teals, and grays
+- **Typography**: Geist font family for modern readability
+- **Components**: Consistent button, card, and input styles
+- **Animations**: Smooth transitions and loading states
+- **Responsive**: Mobile-first design approach
+
+## 🔧 Development
+
+### Code Quality
+- TypeScript for type safety
+- ESLint for code linting
+- Consistent file structure and naming conventions
+- Custom hooks for reusable logic
+- Utility functions for common operations
+
+### Key Features
+- **Skeleton Loading**: Professional loading states
+- **Client-side Caching**: Optimized performance
+- **Error Handling**: Comprehensive error management
+- **Responsive Design**: Works on all devices
+- **Accessibility**: WCAG compliant components
+
+## 📱 User Experience
+
+- **Magic Link Authentication**: Passwordless login
+- **Role-based Access**: Different dashboards for different user types
+- **Real-time Updates**: Live tournament feeds
+- **Intuitive Navigation**: Clear user flows
+- **Professional UI**: Clean, modern interface
+
+## 🚀 Deployment
+
+The application is optimized for deployment on Vercel:
+
+1. Connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy automatically on every push to main
+
+## 🤝 Contributing
+
+This project follows industry best practices:
+- Modular component architecture
+- Type-safe development
+- Consistent code formatting
+- Comprehensive error handling
+- Performance optimizations
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
