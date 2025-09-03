@@ -127,48 +127,90 @@ export default function PlayerDashboard() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold mb-6">Player Dashboard</h1>
-      
-      <div className="mb-4 flex gap-2">
-        <input
-          type="text"
-          placeholder="Enter join code"
-          value={joinCode}
-          onChange={(e) => setJoinCode(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <button
-          onClick={handleJoinTeam}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Join Team
-        </button>
-      </div>
-
-      {teams.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
-          {teams.map((team) => (
-            <div 
-              key={team.id} 
-              className="p-4 border rounded shadow hover:shadow-md cursor-pointer transition-shadow"
-              onClick={() => router.push(`/dashboard/teams/${team.id}`)}
-            >
-              <h2 className="font-bold text-lg">{team.name}</h2>
-              <p className="text-sm text-gray-600">Code: {team.join_code}</p>
-            </div>
-          ))}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Player Dashboard</h1>
+            <p className="text-gray-600">Manage your teams and tournaments</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="btn btn-danger"
+          >
+            Log Out
+          </button>
         </div>
-      ) : (
-        <p className="text-gray-500">You haven&apos;t joined any teams yet.</p>
-      )}
 
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700"
-      >
-        Log Out
-      </button>
-    </main>
+        {/* Join Team Section */}
+        <div className="card p-6 mb-8 fade-in">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Join a Team</h2>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="Enter team join code"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              className="input flex-1"
+            />
+            <button
+              onClick={handleJoinTeam}
+              className="btn btn-primary"
+            >
+              Join Team
+            </button>
+          </div>
+        </div>
+
+        {/* Teams Section */}
+        <div className="card p-6 fade-in">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Your Teams</h2>
+          
+          {teams.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teams.map((team) => (
+                <div 
+                  key={team.id} 
+                  className="card p-6 cursor-pointer hover:shadow-lg transition-all duration-200"
+                  onClick={() => router.push(`/dashboard/teams/${team.id}`)}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                      Active
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{team.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4">Team Code: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{team.join_code}</code></p>
+                  
+                  <div className="flex items-center text-sm text-blue-600 font-medium">
+                    View Team Details
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No teams yet</h3>
+              <p className="text-gray-600 mb-4">Join a team using a join code to get started</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -248,9 +248,72 @@ export default function TeamView() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center">
-        <p>Loading team information...</p>
-      </main>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-6xl mx-auto p-6">
+          {/* Header Skeleton */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="h-10 bg-gray-200 rounded-lg w-20 animate-pulse"></div>
+            <div>
+              <div className="h-10 bg-gray-200 rounded-lg w-64 mb-2 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Team Info Skeleton */}
+          <div className="card p-6 mb-8">
+            <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded w-32 animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                <div className="h-8 bg-gray-200 rounded w-24 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Members Skeleton */}
+          <div className="card p-6 mb-8">
+            <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="card p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                    <div className="h-5 bg-gray-200 rounded-full w-16 animate-pulse"></div>
+                  </div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-1 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tournaments Skeleton */}
+          <div className="card p-6">
+            <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2].map((i) => (
+                <div key={i} className="card p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-gray-200 rounded-xl animate-pulse"></div>
+                    <div className="h-5 bg-gray-200 rounded-full w-16 animate-pulse"></div>
+                  </div>
+                  <div className="h-5 bg-gray-200 rounded w-3/4 mb-3 animate-pulse"></div>
+                  <div className="space-y-2 mb-4">
+                    <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                  </div>
+                  <div className="h-8 bg-gray-200 rounded w-full animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -263,110 +326,177 @@ export default function TeamView() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-8 gap-6">
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => router.back()}
-          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-        >
-          ← Back
-        </button>
-        <h1 className="text-4xl font-bold">{team.name}</h1>
-      </div>
-
-      {/* Team Information */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Team Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => router.back()}
+            className="btn btn-secondary"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
           <div>
-            <p className="text-gray-600">Team Name</p>
-            <p className="font-medium">{team.name}</p>
-          </div>
-          <div>
-            <p className="text-gray-600">Join Code</p>
-            <p className="font-mono bg-gray-100 px-2 py-1 rounded">{team.join_code}</p>
+            <h1 className="text-4xl font-bold text-gray-900">{team.name}</h1>
+            <p className="text-gray-600">Team management and tournament participation</p>
           </div>
         </div>
-      </div>
 
-      {/* Team Members */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Team Members</h2>
-        {teamMembers.length === 0 ? (
-          <p className="text-gray-500">No team members found.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {teamMembers.map((member) => (
-              <div key={member.user.id} className="border p-3 rounded">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium">{member.user.email}</p>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    member.member_type === 'coach' 
-                      ? 'bg-blue-100 text-blue-800' 
-                      : 'bg-green-100 text-green-800'
-                  }`}>
-                    {member.member_type}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 capitalize">{member.user.role}</p>
+        {/* Team Information */}
+        <div className="card p-6 mb-8 fade-in">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Team Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-600">Team Name</label>
+              <p className="text-lg font-semibold text-gray-900">{team.name}</p>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-600">Join Code</label>
+              <div className="flex items-center gap-2">
+                <code className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg font-mono text-sm">{team.join_code}</code>
+                <button
+                  onClick={() => navigator.clipboard.writeText(team.join_code)}
+                  className="btn btn-secondary text-xs"
+                >
+                  Copy
+                </button>
               </div>
-            ))}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Tournaments Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold">Tournaments ({tournaments.length})</h2>
-          {isCoach && (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Enter tournament join code"
-                value={tournamentJoinCode}
-                onChange={(e) => setTournamentJoinCode(e.target.value)}
-                className="border p-2 rounded"
-              />
-              <button
-                onClick={handleJoinTournament}
-                disabled={joiningTournament}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-blue-400"
-              >
-                {joiningTournament ? 'Joining...' : 'Join Tournament'}
-              </button>
+        {/* Team Members */}
+        <div className="card p-6 mb-8 fade-in">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Team Members ({teamMembers.length})</h2>
+          {teamMembers.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 bg-gray-100 rounded-xl mx-auto mb-3 flex items-center justify-center">
+                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p className="text-gray-500">No team members found.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {teamMembers.map((member) => (
+                <div key={member.user.id} className="card p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">
+                        {member.user.email.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                      member.member_type === 'coach' 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {member.member_type}
+                    </span>
+                  </div>
+                  <p className="font-medium text-gray-900 mb-1">{member.user.email}</p>
+                  <p className="text-sm text-gray-600 capitalize">{member.user.role}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {tournaments.length === 0 ? (
-          <p className="text-gray-500">Team is not registered in any tournaments yet.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tournaments.map((tournament) => (
-              <div key={tournament.id} className="border p-4 rounded-lg hover:shadow-md transition-shadow">
-                <h3 className="text-xl font-semibold mb-2">{tournament.name}</h3>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Location:</span> {tournament.location}</p>
-                  <p><span className="font-medium">Start Date:</span> {formatDate(tournament.start_date)}</p>
-                  <p><span className="font-medium">End Date:</span> {formatDate(tournament.end_date)}</p>
-                  <p><span className="font-medium">Join Code:</span> <code className="bg-gray-100 px-1 rounded">{tournament.join_code}</code></p>
-                </div>
-                <div className="mt-4 flex gap-2">
+        {/* Tournaments Section */}
+        <div className="card p-6 fade-in">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold text-gray-900">Tournaments ({tournaments.length})</h2>
+            {isCoach && (
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Enter tournament join code"
+                  value={tournamentJoinCode}
+                  onChange={(e) => setTournamentJoinCode(e.target.value)}
+                  className="input"
+                />
+                <button
+                  onClick={handleJoinTournament}
+                  disabled={joiningTournament}
+                  className="btn btn-primary"
+                >
+                  {joiningTournament ? (
+                    <div className="flex items-center">
+                      <div className="loading-spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                      Joining...
+                    </div>
+                  ) : (
+                    'Join Tournament'
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {tournaments.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 bg-gray-100 rounded-xl mx-auto mb-3 flex items-center justify-center">
+                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <p className="text-gray-500">Team is not registered in any tournaments yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tournaments.map((tournament) => (
+                <div key={tournament.id} className="card p-6 hover:shadow-lg transition-all duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
+                      Active
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{tournament.name}</h3>
+                  
+                  <div className="space-y-2 text-sm text-gray-600 mb-4">
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {tournament.location}
+                    </div>
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {formatDate(tournament.start_date)} - {formatDate(tournament.end_date)}
+                    </div>
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                      </svg>
+                      <code className="bg-gray-100 px-2 py-1 rounded text-xs">{tournament.join_code}</code>
+                    </div>
+                  </div>
+                  
                   <button
                     onClick={() => router.push(`/tournaments/${tournament.id}/feed`)}
-                    className="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700"
+                    className="btn btn-primary w-full"
                   >
-                    View Feed
+                    View Tournament Feed
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-
-    </main>
+    </div>
   );
 }

@@ -56,9 +56,12 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8">
-        <p>Loading...</p>
-      </main>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="text-center">
+          <div className="loading-spinner w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading Rink Relay...</p>
+        </div>
+      </div>
     )
   }
 

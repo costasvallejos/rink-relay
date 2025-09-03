@@ -33,38 +33,69 @@ export default function MagicLinkAuth() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Sign In or Sign Up with Magic Link</h1>
-      <p className="mb-6 text-gray-700">
-        Enter your email and we&apos;ll send you a magic link to sign in or create an account.
-      </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 p-4">
+      <div className="w-full max-w-md">
+        <div className="card p-8 fade-in">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Rink Relay</h1>
+            <p className="text-gray-600">
+              Professional hockey tournament management
+            </p>
+          </div>
 
-      <form onSubmit={handleSendLink} className="flex flex-col gap-4">
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          required
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={loading}
-          className="border p-2 rounded"
-          autoComplete="email"
-        />
+          <form onSubmit={handleSendLink} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                className="input"
+                autoComplete="email"
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Sending magic link...' : 'Send Magic Link'}
-        </button>
-      </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="loading-spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                  Sending magic link...
+                </div>
+              ) : (
+                'Send Magic Link'
+              )}
+            </button>
+          </form>
 
-      {errorMsg && <p className="text-red-600 mt-4">{errorMsg}</p>}
+          {errorMsg && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">{errorMsg}</p>
+            </div>
+          )}
 
-      <p className="mt-6 text-center text-sm text-gray-600">
-        If you didn&apos;t receive a link, check your spam folder or try again.
-      </p>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500">
+              We&apos;ll send you a secure link to sign in or create your account.
+              Check your spam folder if you don&apos;t see it.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
