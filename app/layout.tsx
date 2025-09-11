@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Rink Relay - Hockey Tournament Management",
-  description: "Professional hockey tournament management platform for teams, coaches, and organizers",
+  description: "Social hockey tournament platform for teams, coaches, and organizers",
 };
 
 export default function RootLayout({
